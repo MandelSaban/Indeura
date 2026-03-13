@@ -4,7 +4,7 @@ using proyect.Models;
 
 namespace proyect.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
 
@@ -28,4 +28,21 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    [HttpGet("download/{gameId}")]
+public IActionResult DownloadGame(string gameId)
+{    
+    var path = Path.Combine("Games", gameId + ".zip");
+
+
+    if(!System.IO.File.Exists(path))
+        return NotFound();
+
+
+    var bytes = System.IO.File.ReadAllBytes(path);
+
+
+    return File(bytes, "application/zip", gameId + ".zip");
+}
+
 }
