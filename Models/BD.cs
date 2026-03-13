@@ -29,6 +29,10 @@ public static class BD
                 user.Email = data.Email;
                 user.IsDeveloper = data.IsDeveloper;
                 user.Followers = data.Followers;
+                user.GamesOwned = data.GamesOwned;
+                user.Followed = data.Followed;
+                user.Description = data.Description;
+                
             }
         }
         return user;
