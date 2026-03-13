@@ -18,6 +18,12 @@ public class HomeController : BaseController
         return View();
     }
 
+    public IActionResult GamePage(string gameId)
+    {
+        //ViewBag.gameInfo = BD.findGameById(gameId);
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();
@@ -30,19 +36,19 @@ public class HomeController : BaseController
     }
 
     [HttpGet("download/{gameId}")]
-public IActionResult DownloadGame(string gameId)
-{    
-    var path = Path.Combine("Games", gameId + ".zip");
+    public IActionResult DownloadGame(string gameId)
+    {    
+        var path = Path.Combine("Games", gameId + ".zip");
 
 
-    if(!System.IO.File.Exists(path))
-        return NotFound();
+        if(!System.IO.File.Exists(path))
+            return NotFound();
 
 
-    var bytes = System.IO.File.ReadAllBytes(path);
+        var bytes = System.IO.File.ReadAllBytes(path);
 
 
-    return File(bytes, "application/zip", gameId + ".zip");
-}
+        return File(bytes, "application/zip", gameId + ".zip");
+    }
 
 }
