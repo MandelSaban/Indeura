@@ -3,40 +3,37 @@ using Dapper;
 
 public static class BD
 {
-    private static string _connectionString = @"Server=localhost;DataBase=YUNOVIVA YUOOOOO SEADEA kraco;Integrated Security=True;TrustServerCertificate=True;";
+    private static string _connectionString = @"Server=localhost;DataBase=Indeura;Integrated Security=True;TrustServerCertificate=True;";
 
-    public static Usuarios IniciarSesion(string usuario, string password)
+    public static User IniciarSesion(string usuario, string password)
     {
-        Usuarios user = null;
+        User user = null;
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
             SELECT 1
-            FROM Usuarios AS Usuario
-            WHERE Usuario.NombreUsuario = @usuario
-              AND Usuario.Contraseña = @password";
+            FROM User AS User
+            WHERE User.UserName = @usuario
+              AND User.PasswordHash = @password";
 
             var result = connection.QueryFirstOrDefault<int?>(query, new { usuario, password });
 
             if (result != null)
             {
-                user = new Usuarios();
+                user = new User();
                 user.Id = dameId(usuario);
-                user.NombreUsuario = usuario;
-                user.Contraseña = password;
-                Usuarios data = getUserData(user.Id);
-                user.Nombre = data.Nombre;
-                user.Apellido = data.Apellido;
-                user.TipoCuenta = data.TipoCuenta;
-                user.fechaNacimiento = data.fechaNacimiento;
-                user.IdInstitucion = data.IdInstitucion;
-                user.fotoPerfil = data.fotoPerfil;
+                user.UserName = usuario;
+                user.PasswordHash = password;
+                User data = getUserData(user.Id);                
+                user.ProfilePicture = data.ProfilePicture;
                 user.Email = data.Email;
+                user.IsDeveloper = data.IsDeveloper;
+                user.Followers = data.Followers;
             }
         }
         return user;
     }
-
+    /*
     private static Usuarios getUserData(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -141,4 +138,4 @@ public static class BD
     }
 
 
-}
+}*/

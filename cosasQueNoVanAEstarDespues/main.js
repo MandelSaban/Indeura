@@ -28,7 +28,7 @@ function createWindow() {
 app.whenReady().then(() => {
 
   // carpeta donde se guardan los juegos
-  const gamesFolder = "C:\\MiLauncher\\Games";
+  const gamesFolder = "C:\\Indeura\\Games";
 
   if (!fs.existsSync(gamesFolder)) {
     fs.mkdirSync(gamesFolder, { recursive: true });
@@ -37,7 +37,7 @@ app.whenReady().then(() => {
   // intercepta TODAS las descargas
   session.defaultSession.on("will-download", (event, item) => {
 
-  const gamesFolder = "C:\\MiLauncher\\Games";
+  const gamesFolder = "C:\\Indeura\\Games";
   const savePath = path.join(gamesFolder, item.getFilename());
 
   item.setSavePath(savePath);
