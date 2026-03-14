@@ -5,6 +5,9 @@ public class Game
     public DateTime Date { get; set; }
     public int NumberOfAchievements { get; set; }
 
+    public string GameName { get; set; }
+    public string Description { get; set; }
+
     public Game(){
 
     }

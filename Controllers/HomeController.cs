@@ -21,6 +21,7 @@ public class HomeController : BaseController
     public IActionResult GamePage(int gameId)
     {
         ViewBag.gameInfo = BD.findGameById(gameId);
+        ViewBag.images = BD.getGamePictures(gameId);
         return View();
     }
 

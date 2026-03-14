@@ -144,7 +144,7 @@ public static class BD
          using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
-            SELECT Id, IdPublisher, Date, NumberOfAchievements,PasswordHash,GameName,Description
+            SELECT Id, IdPublisher, Date, NumberOfAchievements,GameName,Description
             FROM Game
             WHERE Id = @gameId";
 
@@ -152,6 +152,19 @@ public static class BD
             return result;
         }
     }
+    public static List<GamePictures> getGamePictures(int gameId)
+{
+    using (SqlConnection connection = new SqlConnection(_connectionString))
+    {
+        string query = @"
+            SELECT *
+            FROM GamePictures
+            WHERE GamePictures.IdGame = @gameId";
+
+        var result = connection.Query<GamePictures>(query, new { gameId }).ToList();
+        return result;
+    }
+}
 }
     
 
