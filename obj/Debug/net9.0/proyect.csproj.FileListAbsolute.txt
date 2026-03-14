@@ -199,3 +199,16 @@ C:\Users\49088017\Downloads\lolc+ow\Indeura\obj\Debug\net9.0\staticwebassets.bui
 C:\Users\49088017\Downloads\lolc+ow\Indeura\obj\Debug\net9.0\proyect.csproj.Up2Date
 C:\Users\49088017\Downloads\lolc+ow\Indeura\obj\Debug\net9.0\proyect.genruntimeconfig.cache
 C:\Users\49088017\Downloads\lolc+ow\Indeura\obj\Debug\net9.0\ref\proyect.dll
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.csproj.AssemblyReference.cache
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.AssemblyInfoInputs.cache
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.AssemblyInfo.cs
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.csproj.CoreCompileInputs.cache
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.RazorAssemblyInfo.cache
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.RazorAssemblyInfo.cs
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.sourcelink.json
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.dll
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\refint\proyect.dll
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.pdb

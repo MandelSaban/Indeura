@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Dapper;
+using System.Drawing;
 
 public static class BD
 {
@@ -37,21 +38,45 @@ public static class BD
         }
         return user;
     }
-    /*
-    private static Usuarios getUserData(int id)
+
+    public static bool Registrarte(string Nombre,  string Contraseña, string Email, bool IsDeveloper)
     {
+        bool registrado = false;
+        string Password = Contraseña;
+        //int IdInstitucion = pedirIdInstitucion(NombreInstitucion);
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"            
+            INSERT INTO User (UserName, PasswordHash, Email, Followers, Followed,IsDeveloper, GamesOwned)
+            VALUES (@Nombre, @Password, @Email, 0, 0, @IsDeveloper, 0);";
+
+            if (!Existe(Nombre) && !MismoMail(Email))
+            {
+                connection.Execute(query, new { Nombre, Contraseña, Email });
+                registrado = true;
+            }
+        }
+        return registrado;
+    }
+
+    public static int dameId(string usuario)
+    {
+        int id = 0;
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
-            SELECT Nombre, Apellido, TipoCuenta, fechaNacimiento, IdInstitucion, fotoPerfil, Email
-            FROM Usuarios
-            WHERE Id = @id";
+                SELECT User.Id
+                FROM User
+                WHERE User.UserName = @usuario";
+            if (Existe(usuario))
+            {
+                var result = connection.QueryFirstOrDefault<int>(query, new { usuario });
+                id = result;
+            }
 
-            var result = connection.QueryFirstOrDefault<Usuarios>(query, new { id });
-            return result;
         }
+        return id;
     }
-
 
     public static bool Existe(string usuario)
     {
@@ -60,8 +85,8 @@ public static class BD
         {
             string query = @"
                 SELECT 1
-                FROM Usuarios
-                WHERE Usuarios.NombreUsuario = @usuario";
+                FROM User
+                WHERE User.UserName = @usuario";
 
             var result = connection.QueryFirstOrDefault<int?>(query, new { usuario });
             if (result != null)
@@ -72,45 +97,18 @@ public static class BD
         return existe;
     }
 
-    public static int dameId(string usuario)
+    private static User getUserData(int id)
     {
-        int id = 0;
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
-                SELECT Usuarios.Id
-                FROM Usuarios
-                WHERE Usuarios.NombreUsuario = @usuario";
-            if (Existe(usuario))
-            {
-                var result = connection.QueryFirstOrDefault<int>(query, new { usuario });
-                id = result;
-            }
+            SELECT Id, IsDeveloper, Followers, GamesOwned, Followed, UserName, ProfilePicture,Description,Email,PasswordHash
+            FROM User
+            WHERE Id = @id";
 
+            var result = connection.QueryFirstOrDefault<User>(query, new { id });
+            return result;
         }
-        return id;
-    }
-    public static bool Registrarte(string Nombre, string Apellido, string NombreUsuario, string Contraseña, string Email, string TipoCuenta, DateTime fechaNacimiento, string NombreInstitucion)
-    {
-        bool registrado = false;
-        //int IdInstitucion = pedirIdInstitucion(NombreInstitucion);
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            string query = @"            
-            INSERT INTO Usuarios (Nombre, Apellido, NombreUsuario, Contraseña, Email, TipoCuenta, fechaNacimiento, IdInstitucion)
-            VALUES (@Nombre, @Apellido, @NombreUsuario, @Contraseña, @Email, @TipoCuenta, @fechaNacimiento, (SELECT Id FROM Instituciones WHERE nombre = @NombreInstitucion));";
-
-            if(!ExisteInstitucion(NombreInstitucion)){
-                AgregarInstitucion(NombreInstitucion);
-            }
-
-            if (!Existe(NombreUsuario) && !MismoMail(Email))
-            {
-                connection.Execute(query, new { Nombre, Apellido, NombreUsuario, Contraseña, Email, TipoCuenta, fechaNacimiento, NombreInstitucion });
-                registrado = true;
-            }
-        }
-        return registrado;
     }
 
     public static bool MismoMail(string email)
@@ -120,8 +118,8 @@ public static class BD
         {
             string query = @"
                 SELECT 1
-                FROM Usuarios
-                WHERE Usuarios.Email = @email";
+                FROM User
+                WHERE User.Email = @email";
 
             var result = connection.QueryFirstOrDefault<int?>(query, new { email });
             if (result != null)
@@ -134,12 +132,30 @@ public static class BD
 
     public static void updateProfilePicture(string FileName,int userId)
     {
-        string query = "UPDATE Usuarios SET fotoPerfil = @FileName WHERE Id = @userId";
+        string query = "UPDATE User SET ProfilePicture = @FileName WHERE Id = @userId";
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             connection.Execute(query, new { FileName,userId });
         }
     }
 
+    public static Game findGameById(int gameId)
+    {
+         using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+            SELECT Id, IdPublisher, Date, NumberOfAchievements,PasswordHash,GameName,Description
+            FROM Game
+            WHERE Id = @gameId";
 
-}*/
+            var result = connection.QueryFirstOrDefault<Game>(query, new { gameId });
+            return result;
+        }
+    }
+}
+    
+
+    
+
+    
+

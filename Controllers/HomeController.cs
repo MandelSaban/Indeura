@@ -18,9 +18,9 @@ public class HomeController : BaseController
         return View();
     }
 
-    public IActionResult GamePage(string gameId)
+    public IActionResult GamePage(int gameId)
     {
-        //ViewBag.gameInfo = BD.findGameById(gameId);
+        ViewBag.gameInfo = BD.findGameById(gameId);
         return View();
     }
 
