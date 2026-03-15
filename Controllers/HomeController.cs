@@ -169,12 +169,12 @@ public class HomeController : BaseController
     }
 
     [HttpPost]
-    public IActionResult Review(int gameId, string description, double rate)
+    public IActionResult Review(int gameId, string description, int rate)
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
         if(usuario != null && !BD.GetReviewed(usuario.Id,gameId))
         {
-            BD.publishReview(gameId,usuario.Id,rate,BD.GetPlaytime(usuario.Id,gameId),description);
+            BD.publishReview(gameId,usuario.Id,(double)rate,BD.GetPlaytime(usuario.Id,gameId),description);
         }
         else
         {

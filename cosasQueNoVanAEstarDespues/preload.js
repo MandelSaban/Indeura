@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  downloadLatest: (user, repo) => ipcRenderer.send("download-latest", {user, repo})
+contextBridge.exposeInMainWorld('electronAPI', {
+  send: (channel, data) => ipcRenderer.send(channel, data)
 });
-
