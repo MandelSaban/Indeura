@@ -1,7 +1,16 @@
 @{
     Game game = ViewBag.gameInfo;
-    var images = ViewBag.images;
+    var images = ViewBag.images;    
     ViewData["Title"] = game.GameName;
+}
+
+@{
+    var usuarioJson = Context.Session.GetString("usuario"); 
+    User usuario = null;
+    if (!string.IsNullOrEmpty(usuarioJson))
+    {
+        usuario = Objeto.StringToObject<User>(usuarioJson);
+    }
 }
 
 <h1>@game.GameName</h1>
@@ -40,11 +49,70 @@
 
 <p>@game.Description</p>
 
-@if (ViewBag.isElectron)
+<p>
+    Tags:
+    @foreach(var tag in ViewBag.tags)
+    {
+        <span>@tag </span>
+    }
+</p>
+
+<p>Created by: @ViewBag.creator</p>
+@if(!ViewBag.IsOwner)
+{
+  if(game.PriceUSD == 0){
+    <a href='@Url.Content("~/Buy/"+game.Id)'>Añadir a tu biblioteca</a>
+  }
+  else{
+    <a href='@Url.Content("~/Buy/"+game.Id)'>Comprar por $@game.PriceUSD USD</a>
+  }  
+}  
+else if (ViewBag.isElectron)
 {
     <a href='@Url.Content("~/Download/"+game.Id)'>Instalar juego</a>
 }
 else
 {
-    <button>Descargar steam2 (steam es malo)</button>
+    <a href='@Url.Content("~/Download/IndeuraSetup.exe")'>Descargar Indeura</a>
 }
+
+<br /><br /><br /><br /><br /><br /><br /><br />
+
+<h4>Reviews</h4>
+@if(ViewBag.reviews.Count > 0){
+  @foreach(Review review in ViewBag.reviews){
+  <div>
+    <p>@BD.getNameById(review.IdUser)</p>
+    <h5>@review.Rating (@((double)(review.PlaytimeSecondsAtPublish/3600))h)</h5>
+    <p>@review.Description</p>
+  </div>
+}
+}
+else{
+  <h6>Aún no hay nada aquí</h6>
+}
+
+@if(!BD.GetReviewed(usuario.Id,game.Id)){
+  <form method="post" action="@Url.Action("Review","Home")">
+  <div>
+        <label>Stars:</label>
+        <input type="range" id="rate" name="rate" min="0" max="5" step="0.5" value="5">
+    </div>
+
+    <div>
+        <label>Comment:</label>
+        <textarea name="description" rows="10" cols="50">Escribe tu opinión...</textarea>
+    </div>
+
+     <input type="hidden" name="gameId" value=@game.Id>
+
+    <button type="submit">Enviar</button>
+</form>
+}
+
+
+
+
+
+
+<br /><br /><br /><br /><br /><br /><br /><br />

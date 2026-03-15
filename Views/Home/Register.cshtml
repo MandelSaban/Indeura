@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<form method="post" action="@Url.Action("Register","Home")">
+
+    <div>
+        <label>Usuario</label>
+        <input type="text" name="Nombre" required>
+    </div>
+
+    <div>
+        <label>Email</label>
+        <input type="email" name="Email" required>
+    </div>
+
+    <div>
+        <label>Contraseña</label>
+        <input type="password" name="Contraseña" required>
+    </div>
+
+    <div>
+        <label>¿Sos desarrollador?</label>
+        <input type="checkbox" name="IsDeveloper" value="true">
+    </div>
+
+    <button type="submit">Registrarse</button>
+
+</form>
+
+@if(ViewBag.Error != null)
+{
+    <p style="color:red">@ViewBag.Error</p>
+}

@@ -8,6 +8,9 @@ public class Game
     public string GameName { get; set; }
     public string Description { get; set; }
 
+    public float PriceUSD { get; set; }
+    public float DiscountPercentage { get; set; }
+
     public Game(){
 
     }

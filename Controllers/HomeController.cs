@@ -20,8 +20,15 @@ public class HomeController : BaseController
 
     public IActionResult GamePage(int gameId)
     {
-        ViewBag.gameInfo = BD.findGameById(gameId);
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        Game g = BD.findGameById(gameId);
+        ViewBag.gameInfo = g;
         ViewBag.images = BD.getGamePictures(gameId);
+        if(usuario != null)
+        ViewBag.isOwner = BD.IsOwner(gameId, usuario.Id);
+        ViewBag.tags = BD.getGameTags(gameId);
+        ViewBag.creator = BD.getNameById(g.IdPublisher);
+        ViewBag.reviews = BD.getGameReviews(gameId);
         return View();
     }
 
@@ -37,8 +44,17 @@ public class HomeController : BaseController
     }
 
     [HttpGet("download/{gameId}")]
-    public IActionResult DownloadGame(string gameId)
-    {    
+    public IActionResult DownloadGame(int gameId)
+    {
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        if(usuario == null)
+        {
+            return RedirectToAction("Login");
+        }
+        if (!BD.IsOwner(gameId,usuario.Id))
+        {
+            return RedirectToAction("GamePage", new { gameId = gameId });
+        }
         var path = Path.Combine("Games", gameId + ".zip");
 
 
@@ -50,6 +66,87 @@ public class HomeController : BaseController
 
 
         return File(bytes, "application/zip", gameId + ".zip");
+    }
+
+    [HttpGet("buy/{gameId}")]
+    public IActionResult buy(int gameId)    
+    {     
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        if(usuario == null)
+        {
+            return RedirectToAction("Login");
+        }
+        BD.AddOwnership(gameId,usuario.Id);
+        return RedirectToAction("GamePage", new { gameId = gameId });
+    }
+
+    [HttpPost]
+    public IActionResult Login(string usuario, string password, string password2)
+    {
+        string redirect="Login";
+        if(password != password2)
+        {
+            ViewBag.Error = "Contraseñas no coinciden";
+            return RedirectToAction("Login");
+        }
+        User user = BD.IniciarSesion(usuario, password);
+        
+        if(user != null)
+        {
+            HttpContext.Session.SetString("usuario", Objeto.ObjectToString(user));
+            redirect = "Index";
+        }
+        else
+        {
+             ViewBag.Error = "Usuario o contraseña incorrectos";
+        }
+       
+        return View(redirect);
+    }
+
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Register(string Nombre, string Contraseña, string Email, bool IsDeveloper)
+    {
+        string redirect="Register";
+        bool registrado = BD.Registrarte(Nombre, Contraseña, Email, IsDeveloper);
+
+        if(registrado)
+        {
+            redirect="Index";
+            User user = BD.IniciarSesion(Nombre, Contraseña);
+            HttpContext.Session.SetString("usuario", Objeto.ObjectToString(user));
+        }
+        else
+        {
+            ViewBag.Error = "El usuario o email ya existe";
+        }
+        
+        return View(redirect);
+    }
+
+    [HttpPost]
+    public IActionResult Review(int gameId, string description, double rate)
+    {
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        if(usuario != null && !BD.GetReviewed(usuario.Id,gameId))
+        {
+            BD.publishReview(gameId,usuario.Id,rate,BD.GetPlaytime(usuario.Id,gameId),description);
+        }
+        else
+        {
+            return RedirectToAction("Login");
+        }
+        return RedirectToAction("GamePage", new { gameId = gameId });
     }
 
 }
