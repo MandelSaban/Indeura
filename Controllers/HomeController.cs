@@ -80,7 +80,7 @@ public class HomeController : BaseController
         return RedirectToAction("GamePage", new { gameId = gameId });
     }
 
-    [HttpPost]
+    /*[HttpPost]
     public IActionResult Login(string usuario, string password, string password2)
     {
         string redirect="Login";
@@ -102,11 +102,45 @@ public class HomeController : BaseController
         }
        
         return View(redirect);
+    }*/
+    
+
+    [HttpPost]
+    public IActionResult Login(string usuario, string password, string password2, string returnUrl)
+        {
+            if(password != password2)
+        {
+            ViewBag.Error = "Contraseñas no coinciden";
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        User user = BD.IniciarSesion(usuario, password);
+
+        if(user != null)
+        {
+            HttpContext.Session.SetString("usuario", Objeto.ObjectToString(user));
+
+            if(!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index");
+        }
+
+        ViewBag.Error = "Usuario o contraseña incorrectos";
+        ViewBag.ReturnUrl = returnUrl;
+        return View();
     }
 
     public IActionResult Login()
     {
         return View();
+    }
+
+    public IActionResult LoginRedirect(string returnUrl)
+    {
+        ViewBag.ReturnUrl = returnUrl;
+        return View("Login");
     }
 
     public IActionResult Register()

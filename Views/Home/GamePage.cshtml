@@ -58,7 +58,16 @@
 </p>
 
 <p>Created by: @ViewBag.creator</p>
-@if(!ViewBag.IsOwner)
+
+@if(usuario == null){
+  if(game.PriceUSD == 0){
+    <a href='@Url.Action("LoginRedirect", "Home", new { returnUrl = "/Home/GamePage?gameId=" + game.Id })'>Añadir a tu biblioteca</a>
+  }
+  else{
+    <a href='@Url.Action("LoginRedirect", "Home", new { returnUrl = "/Home/GamePage?gameId=" + game.Id })'>Comprar por $@game.PriceUSD USD</a>
+  }  
+}
+else if(!ViewBag.IsOwner)
 {
   if(game.PriceUSD == 0){
     <a href='@Url.Content("~/Buy/"+game.Id)'>Añadir a tu biblioteca</a>
@@ -70,13 +79,20 @@
 else if (ViewBag.isElectron)
 {
     <a href='@Url.Content("~/Download/"+game.Id)'>Instalar juego</a>
+    <button onclick="openGame('C:\\Indeura\\Games\\@game.Id\\@game.ExecutableName')">Abrir juego</button>
+
+      <script>       
+        function openGame(filePath){
+            window.electronAPI.send('open-file', filePath);
+        }
+      </script>
 }
 else
 {
     <a href='@Url.Content("~/Download/IndeuraSetup.exe")'>Descargar Indeura</a>
 }
 
-<br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
 
 <h4>Reviews</h4>
 @if(ViewBag.reviews.Count > 0){
@@ -92,6 +108,7 @@ else{
   <h6>Aún no hay nada aquí</h6>
 }
 
+@if(usuario!=null){
 @if(!BD.GetReviewed(usuario.Id,game.Id)){
   <form method="post" action="@Url.Action("Review","Home")">
   <div>
@@ -109,6 +126,8 @@ else{
     <button type="submit">Enviar</button>
 </form>
 }
+}
+
 
 
 

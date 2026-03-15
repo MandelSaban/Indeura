@@ -144,7 +144,7 @@ public static class BD
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
-            SELECT Id, IdPublisher, Date, NumberOfAchievements,GameName,Description, PriceUSD, DiscountPercentage
+            SELECT Id, IdPublisher, Date, NumberOfAchievements,GameName,Description, PriceUSD, DiscountPercentage, ExecutableName
             FROM Game
             WHERE Id = @gameId";
 
