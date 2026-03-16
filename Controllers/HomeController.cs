@@ -18,6 +18,12 @@ public class HomeController : BaseController
         return View();
     }
 
+    public IActionResult Store()
+    {
+        ViewBag.games = BD.ListGames();
+        return View();
+    }
+
     public IActionResult GamePage(int gameId)
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));

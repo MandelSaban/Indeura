@@ -307,10 +307,13 @@ public static bool GetReviewed(int userId, int gameId)
         }
     }
 
+    public static List<Game> ListGames(){
+        using (SqlConnection connection = new SqlConnection(_connectionString)){
+            string query = @"SELECT * FROM GAME;";
+            var result = connection.Query<Game>(query).ToList();
+            return result;
+        }
+    }
 }
-
-
-
-
 
 

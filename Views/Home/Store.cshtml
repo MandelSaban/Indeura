@@ -1,0 +1,14 @@
+@{
+    List<Game> games= ViewBag.games;    
+    ViewData["Title"] = game.GameName;
+}
+
+@for(int i = 1; i < GameId.Count; i++){
+<div class="card">
+  <div class="card-body">
+        <h1>game[i].GameName</h1>
+        <img src="~/GamePictures/hola.jpeg" alt="">
+        <h3>game[i].PreiceUSD</h3>
+  </div>
+</div>
+}
