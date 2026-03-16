@@ -348,3 +348,4 @@ C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.pdb
 C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\proyect.genruntimeconfig.cache
 C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\ref\proyect.dll
 C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\obj\Debug\net9.0\compressed\8j4szy2bbr-{0}-thg2e4gjsj-thg2e4gjsj.gz
+C:\Users\TOMAS\Desktop\proyecto\mvc\Indeura\bin\Debug\net9.0\BCrypt.Net-Next.dll

@@ -6,25 +6,26 @@ public static class BD
 {
     private static string _connectionString = @"Server=localhost;DataBase=Indeura;Integrated Security=True;TrustServerCertificate=True;";
 
-    public static User IniciarSesion(string usuario, string password)
+    /*public static User IniciarSesion(string usuario, string password)
     {
         User user = null;
+        string hashed = Hashing.passwordHash(password);
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
             SELECT 1
             FROM [User] u
             WHERE u.UserName = @usuario
-              AND u.PasswordHash = @password";
+              AND u.PasswordHash = @hashed";
 
-            var result = connection.QueryFirstOrDefault<int?>(query, new { usuario, password });
+            var result = connection.QueryFirstOrDefault<int?>(query, new { usuario, hashed });
 
             if (result != null)
             {
                 user = new User();
                 user.Id = dameId(usuario);
                 user.UserName = usuario;
-                user.PasswordHash = password;
+                //user.PasswordHash = password;
                 User data = getUserData(user.Id);
                 user.ProfilePicture = data.ProfilePicture;
                 user.Email = data.Email;
@@ -37,12 +38,39 @@ public static class BD
             }
         }
         return user;
+    }*/
+
+    public static User IniciarSesion(string usuario, string password)
+{
+    User user = null;
+
+    using (SqlConnection connection = new SqlConnection(_connectionString))
+    {
+        string query = @"
+        SELECT *
+        FROM [User]
+        WHERE UserName = @usuario";
+
+        User dbUser = connection.QueryFirstOrDefault<User>(query, new { usuario });
+
+        if (dbUser != null)
+        {
+            bool ok = BCrypt.Net.BCrypt.Verify(password, dbUser.PasswordHash);
+
+            if (ok)
+            {
+                user = dbUser;
+            }
+        }
     }
+
+    return user;
+}
 
     public static bool Registrarte(string Nombre, string Contraseña, string Email, bool IsDeveloper)
     {
         bool registrado = false;
-        string Password = Contraseña;
+        string Password = Hashing.passwordHash(Contraseña);
 
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {

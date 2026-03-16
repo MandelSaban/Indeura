@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "bGYN8OhCK2Y=",
+  "dgSpecHash": "9VNG7iL1/Vo=",
   "success": true,
   "projectFilePath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TOMAS\\.nuget\\packages\\azure.core\\1.50.0\\azure.core.1.50.0.nupkg.sha512",
     "C:\\Users\\TOMAS\\.nuget\\packages\\azure.identity\\1.17.1\\azure.identity.1.17.1.nupkg.sha512",
+    "C:\\Users\\TOMAS\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\TOMAS\\.nuget\\packages\\dapper\\2.1.72\\dapper.2.1.72.nupkg.sha512",
     "C:\\Users\\TOMAS\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\2.3.0\\microsoft.aspnetcore.cryptography.internal.2.3.0.nupkg.sha512",
     "C:\\Users\\TOMAS\\.nuget\\packages\\microsoft.aspnetcore.dataprotection\\2.3.0\\microsoft.aspnetcore.dataprotection.2.3.0.nupkg.sha512",
