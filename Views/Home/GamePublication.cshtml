@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Create game page";
+}
+
+<form method="post" action="@Url.Action("GameUpload","Home")">
+    <div>
+        <label>Nombre del juego</label>
+        <input type="text" name="name" required />
+    </div>
+
+    <p>@ViewBag.Error</p>    
+
+     <div>
+        <label>Descripción</label>
+        <textarea name="description" rows="10" cols="50">
+        @if(!string.IsNullOrEmpty(@ViewBag.Desc)){
+            @ViewBag.Desc
+        }
+        </textarea>
+    </div>    
+
+    <input type="submit" value="Publish" />
+
+</form>

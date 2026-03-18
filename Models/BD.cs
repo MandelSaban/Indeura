@@ -6,40 +6,7 @@ public static class BD
 {
     private static string _connectionString = @"Server=localhost;DataBase=Indeura;Integrated Security=True;TrustServerCertificate=True;";
 
-    /*public static User IniciarSesion(string usuario, string password)
-    {
-        User user = null;
-        string hashed = Hashing.passwordHash(password);
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            string query = @"
-            SELECT 1
-            FROM [User] u
-            WHERE u.UserName = @usuario
-              AND u.PasswordHash = @hashed";
-
-            var result = connection.QueryFirstOrDefault<int?>(query, new { usuario, hashed });
-
-            if (result != null)
-            {
-                user = new User();
-                user.Id = dameId(usuario);
-                user.UserName = usuario;
-                //user.PasswordHash = password;
-                User data = getUserData(user.Id);
-                user.ProfilePicture = data.ProfilePicture;
-                user.Email = data.Email;
-                user.IsDeveloper = data.IsDeveloper;
-                user.Followers = data.Followers;
-                user.GamesOwned = data.GamesOwned;
-                user.Followed = data.Followed;
-                user.Description = data.Description;
-
-            }
-        }
-        return user;
-    }*/
-
+    
     public static User IniciarSesion(string usuario, string password)
 {
     User user = null;
@@ -307,7 +274,51 @@ public static bool GetReviewed(int userId, int gameId)
         }
     }
 
+    public static bool thisGameExists(int GameName)
+    {
+        bool existe = false;
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                SELECT 1
+                FROM Game
+                WHERE GameName = @GameName";
+
+            var result = connection.QueryFirstOrDefault<int?>(query, new { GameName });
+            if (result != null)
+            {
+                existe = true;
+            }
+        }
+        return existe;
+    }
+
+    public static void CreateNewGamePage(string GameName, string description, int idPublisher, DateTime date)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"            
+            INSERT INTO Game (GameName, Description, IdPublisher, Date, NumberOfAchivements, PriceUSD, DiscountPercentage, ExecutableName)
+            VALUES (@GameName, @description, @idPublisher, @date, 0, 0, 0, '');";
+
+            connection.Execute(query, new { GameName, description, idPublisher, date });
+        }
+    }
+
+    public static void InsertImagesGame(int idGame, string imageDir)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"            
+            INSERT INTO GamePictures (IdGame,Image)
+            VALUES (@idGame, @imageDir);";
+
+            connection.Execute(query, new { idGame, imageDir });
+        }
+    }
+
 }
+
 
 
 

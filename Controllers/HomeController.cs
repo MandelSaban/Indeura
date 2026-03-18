@@ -22,6 +22,8 @@ public class HomeController : BaseController
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
         Game g = BD.findGameById(gameId);
+
+        ViewBag.ImPublisher = (usuario.Id == g.IdPublisher);
         ViewBag.gameInfo = g;
         ViewBag.images = BD.getGamePictures(gameId);
         if(usuario != null)
@@ -30,6 +32,14 @@ public class HomeController : BaseController
         ViewBag.creator = BD.getNameById(g.IdPublisher);
         ViewBag.reviews = BD.getGameReviews(gameId);
         return View();
+    }
+
+    public ActionResult SubirImagenes(List<HttpPostedFileBase> imagenes, string returnUrl, int idGame)
+    {
+        foreach(var img in imagenes){
+            BD.InsertImagesGame(idGame, img.FileName);
+        }
+        return View(returnUrl);
     }
 
     public IActionResult Privacy()
@@ -80,29 +90,24 @@ public class HomeController : BaseController
         return RedirectToAction("GamePage", new { gameId = gameId });
     }
 
-    /*[HttpPost]
-    public IActionResult Login(string usuario, string password, string password2)
-    {
-        string redirect="Login";
-        if(password != password2)
+    public IActionResult GamePublication()
+    {      
+        return View();
+    }
+
+    public IActionResult GamePublication(string name, string description)
+    {        
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        if(BD.thisGameExists(name))
         {
-            ViewBag.Error = "Contraseñas no coinciden";
-            return RedirectToAction("Login");
-        }
-        User user = BD.IniciarSesion(usuario, password);
+            ViewBag.Error = "Ese nombre ya esta en uso";
+            ViewBag.Desc = description;
+            return RedirectToAction("GamePublication");
+        }        
         
-        if(user != null)
-        {
-            HttpContext.Session.SetString("usuario", Objeto.ObjectToString(user));
-            redirect = "Index";
-        }
-        else
-        {
-             ViewBag.Error = "Usuario o contraseña incorrectos";
-        }
-       
-        return View(redirect);
-    }*/
+        BD.CreateNewGamePage(name, description, usuario.Id, DateTime.Today.ToString("dd/MM/yyyy"));
+        return View();
+    }
     
 
     [HttpPost]

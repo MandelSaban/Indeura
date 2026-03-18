@@ -1,6 +1,6 @@
 @{
     Game game = ViewBag.gameInfo;
-    var images = ViewBag.images;    
+    var images = ViewBag.images;
     ViewData["Title"] = game.GameName;
 }
 
@@ -13,7 +13,7 @@
     }
 }
 
-<h1>@game.GameName</h1>
+<h1>@game.GameName</h1>   
 
 @if(images != null && images.Count > 0)
 {
@@ -45,6 +45,12 @@
 
 </div>
 </div>
+}
+@if(ViewBag.ImPublisher){
+  <form action="@Url.Action("SubirImagenes","Home")" method="post" enctype="multipart/form-data">
+    <input type="file" name="imagenes" multiple accept="image/*" />
+    <button type="submit">Subir</button>
+  </form>
 }
 
 <p>@game.Description</p>
