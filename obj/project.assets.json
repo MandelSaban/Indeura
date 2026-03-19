@@ -693,6 +693,22 @@
           }
         }
       },
+      "SixLabors.ImageSharp/3.1.12": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/SixLabors.ImageSharp.props": {}
+        }
+      },
       "System.ClientModel/1.8.0": {
         "type": "package",
         "dependencies": {
@@ -1881,6 +1897,22 @@
         "packageIcon.png"
       ]
     },
+    "SixLabors.ImageSharp/3.1.12": {
+      "sha512": "iAg6zifihXEFS/t7fiHhZBGAdCp3FavsF4i2ZIDp0JfeYeDVzvmlbY1CNhhIKimaIzrzSi5M/NBFcWvZT2rB/A==",
+      "type": "package",
+      "path": "sixlabors.imagesharp/3.1.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "build/SixLabors.ImageSharp.props",
+        "lib/net6.0/SixLabors.ImageSharp.dll",
+        "lib/net6.0/SixLabors.ImageSharp.xml",
+        "sixlabors.imagesharp.128.png",
+        "sixlabors.imagesharp.3.1.12.nupkg.sha512",
+        "sixlabors.imagesharp.nuspec"
+      ]
+    },
     "System.ClientModel/1.8.0": {
       "sha512": "AqRzhn0v29GGGLj/Z6gKq4lGNtvPHT4nHdG5PDJh9IfVjv/nYUVmX11hwwws1vDFeIAzrvmn0dPu8IjLtu6fAw==",
       "type": "package",
@@ -2323,7 +2355,8 @@
       "Dapper >= 2.1.72",
       "Microsoft.AspNetCore.Session >= 2.3.9",
       "Microsoft.Data.SqlClient >= 6.1.4",
-      "Newtonsoft.Json >= 13.0.4"
+      "Newtonsoft.Json >= 13.0.4",
+      "SixLabors.ImageSharp >= 3.1.12"
     ]
   },
   "packageFolders": {
@@ -2333,11 +2366,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj",
+      "projectUniqueName": "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\proyect.csproj",
       "projectName": "proyect",
-      "projectPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj",
+      "projectPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\proyect.csproj",
       "packagesPath": "C:\\Users\\TOMAS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\obj\\",
+      "outputPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2396,6 +2429,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.4, )"
+          },
+          "SixLabors.ImageSharp": {
+            "target": "Package",
+            "version": "[3.1.12, )"
           }
         },
         "imports": [

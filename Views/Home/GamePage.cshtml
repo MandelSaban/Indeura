@@ -47,14 +47,27 @@
 </div>
 }
 @if(ViewBag.ImPublisher){
-  <form action="@Url.Action("SubirImagenes","Home")" method="post" enctype="multipart/form-data">
-    <input type="file" name="imagenes" multiple accept="image/*" />
+  <form action="@Url.Action("UploadGameImage","Home")" method="post" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" />
+    <input type="hidden" name="idGame" value=@game.Id/>
+    <input type="hidden" name="returnUrl" value="/Home/GamePage?gameId=" + game.Id/>
     <button type="submit">Subir</button>
   </form>
 }
 
+@if(ViewBag.ImPublisher){
 <p>@game.Description</p>
+}
+else{
+  <form method="post" action="@Url.Action("GameUpload","Home")">
+   
+        <textarea name="description" rows="10" cols="50">
+        @game.Description
+        </textarea>  
+    <input type="submit" value="Save" />
 
+</form>
+}
 <p>
     Tags:
     @foreach(var tag in ViewBag.tags)

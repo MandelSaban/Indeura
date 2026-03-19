@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj": {}
+    "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\proyect.csproj": {}
   },
   "projects": {
-    "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj": {
+    "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\proyect.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj",
+        "projectUniqueName": "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\proyect.csproj",
         "projectName": "proyect",
-        "projectPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\proyect.csproj",
+        "projectPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\proyect.csproj",
         "packagesPath": "C:\\Users\\TOMAS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\mvc\\Indeura\\obj\\",
+        "outputPath": "C:\\Users\\TOMAS\\Desktop\\proyecto\\Indeura\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -70,6 +70,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.4, )"
+            },
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[3.1.12, )"
             }
           },
           "imports": [

@@ -1,6 +1,10 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using proyect.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using System.IO;
+
 
 namespace proyect.Controllers;
 
@@ -34,13 +38,99 @@ public class HomeController : BaseController
         return View();
     }
 
-    public ActionResult SubirImagenes(List<HttpPostedFileBase> imagenes, string returnUrl, int idGame)
+    [HttpPost]
+public async Task<IActionResult> UploadGameImage(IFormFile image, string returnUrl, int idGame)
+{
+    User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+
+    if (image != null && image.Length > 0)
     {
-        foreach(var img in imagenes){
-            BD.InsertImagesGame(idGame, img.FileName);
-        }
-        return View(returnUrl);
+        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/GamePictures");
+        if (!Directory.Exists(uploads))
+            Directory.CreateDirectory(uploads);
+
+        var extension = Path.GetExtension(image.FileName);
+        var nombreArchivo = $"{usuario.Id}_{Guid.NewGuid():N}{extension}";
+        //var filePath = Path.Combine(uploads, nombreArchivo);
+
+        /*// 🔹 Guardar temporalmente el archivo subido
+        var tempPath = Path.Combine(uploads, "temp_" + Guid.NewGuid() + extension);
+        using (var tempStream = new FileStream(tempPath, FileMode.Create))
+        {
+            await image.CopyToAsync(tempStream);
+        }       
+
+        // 🔹 Borrar el temporal
+        System.IO.File.Delete(tempPath);*/
+
+        // 🔹 Actualizar en BD y sesión
+        BD.InsertImagesGame(idGame, image.FileName);
+        usuario.ProfilePicture = nombreArchivo;
+        HttpContext.Session.SetString("usuario", Objeto.ObjectToString(usuario));
     }
+
+    return RedirectToAction(returnUrl);
+}
+
+
+    [HttpPost]
+public async Task<IActionResult> SubirImagen(IFormFile avatar)
+{
+    User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+
+    if (avatar != null && avatar.Length > 0)
+    {
+        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/profilePictures");
+        if (!Directory.Exists(uploads))
+            Directory.CreateDirectory(uploads);
+
+        var extension = Path.GetExtension(avatar.FileName);
+        var nombreArchivo = $"{usuario.Id}_{Guid.NewGuid():N}{extension}";
+        var filePath = Path.Combine(uploads, nombreArchivo);
+
+        // 🔹 Guardar temporalmente el archivo subido
+        var tempPath = Path.Combine(uploads, "temp_" + Guid.NewGuid() + extension);
+        using (var tempStream = new FileStream(tempPath, FileMode.Create))
+        {
+            await avatar.CopyToAsync(tempStream);
+        }
+
+        // 🔹 Borrar la imagen anterior si existe
+        if (!string.IsNullOrEmpty(usuario.ProfilePicture))
+        {
+            var oldPath = Path.Combine(uploads, usuario.ProfilePicture);
+            if (System.IO.File.Exists(oldPath))
+            {
+                try { System.IO.File.Delete(oldPath); } catch { }
+            }
+        }
+
+        // 🔹 Procesar la imagen cuadrada desde el archivo temporal
+        using (var image = SixLabors.ImageSharp.Image.Load(tempPath))
+        {
+            int lado = Math.Min(image.Width, image.Height);
+            int x = (image.Width - lado) / 2;
+            int y = (image.Height - lado) / 2;
+
+            image.Mutate(xform => xform.Crop(new SixLabors.ImageSharp.Rectangle(x, y, lado, lado)));
+
+            // opcional: redimensionar
+            // image.Mutate(xform => xform.Resize(400, 400));
+
+            await image.SaveAsync(filePath);
+        }
+
+        // 🔹 Borrar el temporal
+        System.IO.File.Delete(tempPath);
+
+        // 🔹 Actualizar en BD y sesión
+        BD.updateProfilePicture(nombreArchivo, usuario.Id);
+        usuario.ProfilePicture = nombreArchivo;
+        HttpContext.Session.SetString("usuario", Objeto.ObjectToString(usuario));
+    }
+
+    return RedirectToAction("Perfil");
+}
 
     public IActionResult Privacy()
     {

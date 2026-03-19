@@ -274,7 +274,7 @@ public static bool GetReviewed(int userId, int gameId)
         }
     }
 
-    public static bool thisGameExists(int GameName)
+    public static bool thisGameExists(string GameName)
     {
         bool existe = false;
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -293,7 +293,7 @@ public static bool GetReviewed(int userId, int gameId)
         return existe;
     }
 
-    public static void CreateNewGamePage(string GameName, string description, int idPublisher, DateTime date)
+    public static void CreateNewGamePage(string GameName, string description, int idPublisher, string date)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
