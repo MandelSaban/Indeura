@@ -59,11 +59,12 @@
 <p>@game.Description</p>
 }
 else{
-  <form method="post" action="@Url.Action("GameUpload","Home")">
+  <form method="post" action="@Url.Action("UpdateGameDescription","Home")">
    
         <textarea name="description" rows="10" cols="50">
         @game.Description
         </textarea>  
+        <input type="hidden" name="returnUrl" value="/Home/GamePage?gameId=" + game.Id/>
     <input type="submit" value="Save" />
 
 </form>

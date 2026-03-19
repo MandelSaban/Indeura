@@ -22,6 +22,12 @@ public class HomeController : BaseController
         return View();
     }
 
+     public IActionResult UpdateGameDescription(string description, string returnUrl)
+    {
+        
+        return RedirectToAction(returnUrl);
+    }
+
     public IActionResult GamePage(int gameId)
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
