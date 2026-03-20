@@ -2,14 +2,25 @@
     ViewData["Title"] = "Home Page";
 }
 
+@{
+    var usuarioJson = Context.Session.GetString("usuario"); 
+    User usuario = null;
+    if (!string.IsNullOrEmpty(usuarioJson))
+    {
+        usuario = Objeto.StringToObject<User>(usuarioJson);
+    }
+}
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<a href='@Url.Action("GamePage","Home", new {gameId = 1})'>aaa</a>
 <a href='@Url.Action("Login","Home")'>login</a>
 <a href='@Url.Action("Register","Home")'>register</a>
-<a href='@Url.Action("Profile","Home", new {userId = 1})'>perfil</a>
 <a href='@Url.Action("GamePublicationEnter","Home")'>uploadGame</a>
 <a href='@Url.Action("Store","Home")'>store</a>
+
+@if(usuario!=null){
+    <a href='@Url.Action("Profile","Home", new {userId = usuario.Id})'>perfil</a>
+}

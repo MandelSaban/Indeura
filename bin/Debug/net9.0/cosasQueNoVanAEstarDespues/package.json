@@ -1,5 +1,5 @@
 {
-  "name": "electron",
+  "name": "IndeuraLauncher",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -7,7 +7,7 @@
     "start": "electron ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Indeura Inc",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {

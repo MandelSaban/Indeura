@@ -60,16 +60,15 @@
   </form>
 }
 
-@if(publi){
-<p>@game.Description</p>
+@if(!publi){
+<pre>@game.Description</pre>
 }
 else{
   <form method="post" action="@Url.Action("UpdateGameDescription","Home")">
    
-        <textarea name="description" rows="10" cols="50">
-        @game.Description
-        </textarea>  
-        <input type="hidden" name="returnUrl" value="/Home/GamePage?gameId=" + game.Id/>
+        <textarea name="description" rows="10" cols="50">@game.Description</textarea>  
+        <input type="hidden" name="returnUrl" value="@($"/Home/GamePage?gameId={game.Id}")"/>
+        <input type="hidden" name="gameId" value="@game.Id" />
     <input type="submit" value="Save" />
 
 </form>
@@ -82,7 +81,7 @@ else{
     }
 </p>
 
-<p>Created by: @ViewBag.creator</p>
+<p>Created by: <a href='@Url.Action("Profile","Home", new {userId = @game.IdPublisher})'>@ViewBag.creator</a></p>
 
 @if(usuario == null){
   if(game.PriceUSD == 0){
@@ -104,13 +103,13 @@ else if(!ViewBag.IsOwner)
 else if (ViewBag.isElectron)
 {
     <a href='@Url.Content("~/Download/"+game.Id)'>Instalar juego</a>
-    <button onclick="openGame('C:\\Indeura\\Games\\@game.Id\\@game.ExecutableName')">Abrir juego</button>
+    <button onclick="openGame('C:\\Indeura\\Games\\@game.Id')">Abrir juego</button>
 
-      <script>       
-        function openGame(filePath){
-            window.electronAPI.send('open-file', filePath);
-        }
-      </script>
+    <script>       
+    function openGame(folderPath){
+        window.electronAPI.send('open-game-folder', folderPath);
+    }
+    </script>
 }
 else
 {

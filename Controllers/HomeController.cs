@@ -22,22 +22,24 @@ public class HomeController : BaseController
         return View();
     }
 
-     public IActionResult UpdateGameDescription(string description, string returnUrl)
+     public IActionResult UpdateGameDescription(string description, string returnUrl, int gameId)
     {
-
-        return RedirectToAction(returnUrl);
+        BD.UpdateGameDescription(description,gameId);
+        return Redirect(returnUrl);
     }
 
     public IActionResult GamePage(int gameId)
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
         Game g = BD.findGameById(gameId);
-
-        ViewBag.ImPublisher = (usuario.Id == g.IdPublisher);
+        
         ViewBag.gameInfo = g;
         ViewBag.images = BD.getGamePictures(gameId);
-        if(usuario != null)
-        ViewBag.isOwner = BD.IsOwner(gameId, usuario.Id);
+        if(usuario != null){
+            ViewBag.isOwner = BD.IsOwner(gameId, usuario.Id);
+            ViewBag.ImPublisher = (usuario.Id == g.IdPublisher);
+        }
+        
         ViewBag.tags = BD.getGameTags(gameId);
         ViewBag.creator = BD.getNameById(g.IdPublisher);
         ViewBag.reviews = BD.getGameReviews(gameId);

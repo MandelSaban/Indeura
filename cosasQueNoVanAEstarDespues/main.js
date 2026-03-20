@@ -3,6 +3,7 @@ const https = require("https");
 const path = require("path");
 const fs = require("fs");
 const extract = require("extract-zip");
+const { exec } = require("child_process");
 
 let mainWindow;
 
@@ -82,9 +83,34 @@ ipcMain.on("download-latest", (event, data) => {
 });
 
 // NUEVO: abrir un archivo en un path específico
-ipcMain.on("open-file", (event, filePath) => {
-  shell.openPath(filePath)
-    .then(result => {
-      if (result) console.error("Error al abrir archivo:", result);
+ipcMain.on("open-game-folder", (event, folderPath) => {
+  fs.readdir(folderPath, (err, files) => {
+    if (err) {
+      console.error("Error leyendo carpeta:", err);
+      return;
+    }
+
+    // Filtrar solo .exe
+    const exeFiles = files.filter(f => f.toLowerCase().endsWith(".exe"));
+
+    if (exeFiles.length === 0) {
+      console.error("No se encontró ningún .exe en:", folderPath);
+      return;
+    }
+
+    // Prioridad: game.exe → sino el primero
+    let selectedExe =
+      exeFiles.find(f => f.toLowerCase() === "game.exe") ||
+      exeFiles[0];
+
+    const fullPath = path.join(folderPath, selectedExe);
+
+    console.log("Ejecutando:", fullPath);
+
+    exec(`"${fullPath}"`, (error) => {
+      if (error) {
+        console.error("Error al ejecutar el .exe:", error);
+      }
     });
+  });
 });

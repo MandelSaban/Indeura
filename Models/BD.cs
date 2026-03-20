@@ -305,6 +305,18 @@ public static bool GetReviewed(int userId, int gameId)
         }
     }
 
+    public static void UpdateGameDescription(string description, int gameId)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+                    string query = "UPDATE Game SET Description = @description WHERE Id = @gameId";
+                
+                
+                    connection.Execute(query, new { description, gameId });
+                
+        }
+    }
+
     public static void InsertImagesGame(int idGame, string imageDir)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
