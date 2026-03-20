@@ -1,0 +1,7 @@
+@{
+    ViewData["Title"] = "Store";
+}
+
+@foreach(var game in ViewBag.listGamesId){
+    <a href='@Url.Action("GamePage","Home", new {gameId = game})'>@game</a>
+}

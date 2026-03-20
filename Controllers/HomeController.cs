@@ -134,7 +134,7 @@ public async Task<IActionResult> SubirImagen(IFormFile avatar, string returnUrl)
         HttpContext.Session.SetString("usuario", Objeto.ObjectToString(usuario));
     }
 
-    return RedirectToAction(returnUrl);
+    return Redirect(returnUrl);
 }
 
     public IActionResult Privacy()
@@ -144,7 +144,15 @@ public async Task<IActionResult> SubirImagen(IFormFile avatar, string returnUrl)
 
     public IActionResult Profile(int userId)
     {
+        bool isMe = false;
+        User user = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
         ViewBag.usuario = BD.getUserData(userId);
+        if(user != null){
+             isMe= (user.Id == userId);
+        }
+        
+        ViewBag.me = isMe;
+        
         return View();
     }
 
@@ -191,24 +199,28 @@ public async Task<IActionResult> SubirImagen(IFormFile avatar, string returnUrl)
         return RedirectToAction("GamePage", new { gameId = gameId });
     }
 
-    public IActionResult GamePublication()
+    [HttpGet]
+    public IActionResult GamePublicationEnter()
     {      
-        return View();
+        return View("GamePublication");
     }
 
-    public IActionResult GamePublication(string name, string description)
-    {        
-        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
-        if(BD.thisGameExists(name))
-        {
-            ViewBag.Error = "Ese nombre ya esta en uso";
-            ViewBag.Desc = description;
-            return RedirectToAction("GamePublication");
-        }        
-        
-        BD.CreateNewGamePage(name, description, usuario.Id, DateTime.Today.ToString("dd/MM/yyyy"));
-        return View();
-    }
+    [HttpPost]
+public IActionResult GamePublication(string name, string description)
+{
+    User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+
+    if (BD.thisGameExists(name))
+    {
+        ViewBag.Error = "Ese nombre ya esta en uso";
+        ViewBag.Desc = description;
+        return View(); // ⚠️ NO Redirect
+    }        
+
+    BD.CreateNewGamePage(name, description, usuario.Id, DateTime.Today);
+    
+    return RedirectToAction("Index");
+}
     
 
     [HttpPost]
@@ -287,6 +299,12 @@ public async Task<IActionResult> SubirImagen(IFormFile avatar, string returnUrl)
             return RedirectToAction("Login");
         }
         return RedirectToAction("GamePage", new { gameId = gameId });
+    }
+
+    public IActionResult Store()
+    {
+        ViewBag.listGamesId = BD.getAllGamesId();
+        return View();
     }
 
 }

@@ -293,12 +293,12 @@ public static bool GetReviewed(int userId, int gameId)
         return existe;
     }
 
-    public static void CreateNewGamePage(string GameName, string description, int idPublisher, string date)
+    public static void CreateNewGamePage(string GameName, string description, int idPublisher, DateTime date)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"            
-            INSERT INTO Game (GameName, Description, IdPublisher, Date, NumberOfAchivements, PriceUSD, DiscountPercentage, ExecutableName)
+            INSERT INTO Game (GameName, Description, IdPublisher, Date, NumberOfAchievements, PriceUSD, DiscountPercentage, ExecutableName)
             VALUES (@GameName, @description, @idPublisher, @date, 0, 0, 0, '');";
 
             connection.Execute(query, new { GameName, description, idPublisher, date });
@@ -316,6 +316,21 @@ public static bool GetReviewed(int userId, int gameId)
             connection.Execute(query, new { idGame, imageDir });
         }
     }
+
+    public static List<int> getAllGamesId()
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                SELECT Id
+                FROM Game";
+
+            var result = connection.Query<int>(query).ToList();
+            return result;           
+        }
+    }
+
+
 
 }
 
