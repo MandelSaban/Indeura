@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<img src="~/img/profilePictures/@ViewBag.usuario.Id">
+
+<form action="@Url.Action("SubirImagen","Home")" method="post" enctype="multipart/form-data">
+    <input type="file" name="avatar" accept="image/*" required/>
+    <input type="hidden" name="returnUrl" value="@($"/Home/Profile?userId={ViewBag.usuario.Id}")" />
+    <button type="submit">Subir</button>
+  </form>

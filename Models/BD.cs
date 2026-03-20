@@ -92,7 +92,7 @@ public static class BD
         return existe;
     }
 
-    private static User getUserData(int id)
+    public static User getUserData(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {

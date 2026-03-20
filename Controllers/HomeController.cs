@@ -24,7 +24,7 @@ public class HomeController : BaseController
 
      public IActionResult UpdateGameDescription(string description, string returnUrl)
     {
-        
+
         return RedirectToAction(returnUrl);
     }
 
@@ -44,43 +44,42 @@ public class HomeController : BaseController
         return View();
     }
 
-    [HttpPost]
+
+[HttpPost]
 public async Task<IActionResult> UploadGameImage(IFormFile image, string returnUrl, int idGame)
 {
-    User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+    Game game = BD.findGameById(idGame);
+
+    if (game == null)
+    {
+        return Content("Game no encontrado");
+    }
 
     if (image != null && image.Length > 0)
     {
-        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/GamePictures");
+        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/GamePictures/"+idGame);
+
         if (!Directory.Exists(uploads))
             Directory.CreateDirectory(uploads);
 
         var extension = Path.GetExtension(image.FileName);
-        var nombreArchivo = $"{usuario.Id}_{Guid.NewGuid():N}{extension}";
-        //var filePath = Path.Combine(uploads, nombreArchivo);
+        var nombreArchivo = $"{game.Id}_{Guid.NewGuid():N}{extension}";
+        var path = Path.Combine(uploads, nombreArchivo);
 
-        /*// 🔹 Guardar temporalmente el archivo subido
-        var tempPath = Path.Combine(uploads, "temp_" + Guid.NewGuid() + extension);
-        using (var tempStream = new FileStream(tempPath, FileMode.Create))
+        using (var stream = new FileStream(path, FileMode.Create))
         {
-            await image.CopyToAsync(tempStream);
-        }       
+            await image.CopyToAsync(stream);
+        }
 
-        // 🔹 Borrar el temporal
-        System.IO.File.Delete(tempPath);*/
-
-        // 🔹 Actualizar en BD y sesión
-        BD.InsertImagesGame(idGame, image.FileName);
-        usuario.ProfilePicture = nombreArchivo;
-        HttpContext.Session.SetString("usuario", Objeto.ObjectToString(usuario));
+        BD.InsertImagesGame(idGame, nombreArchivo);
     }
 
-    return RedirectToAction(returnUrl);
+    return Redirect(returnUrl);
 }
 
 
     [HttpPost]
-public async Task<IActionResult> SubirImagen(IFormFile avatar)
+public async Task<IActionResult> SubirImagen(IFormFile avatar, string returnUrl)
 {
     User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
 
@@ -121,7 +120,7 @@ public async Task<IActionResult> SubirImagen(IFormFile avatar)
             image.Mutate(xform => xform.Crop(new SixLabors.ImageSharp.Rectangle(x, y, lado, lado)));
 
             // opcional: redimensionar
-            // image.Mutate(xform => xform.Resize(400, 400));
+            image.Mutate(xform => xform.Resize(400, 400));
 
             await image.SaveAsync(filePath);
         }
@@ -135,11 +134,17 @@ public async Task<IActionResult> SubirImagen(IFormFile avatar)
         HttpContext.Session.SetString("usuario", Objeto.ObjectToString(usuario));
     }
 
-    return RedirectToAction("Perfil");
+    return RedirectToAction(returnUrl);
 }
 
     public IActionResult Privacy()
     {
+        return View();
+    }
+
+    public IActionResult Profile(int userId)
+    {
+        ViewBag.usuario = BD.getUserData(userId);
         return View();
     }
 

@@ -1,6 +1,11 @@
 @{
     Game game = ViewBag.gameInfo;
     var images = ViewBag.images;
+    bool publi = false;
+    if(ViewBag.ImPublisher != null){
+      publi = ViewBag.ImPublisher;
+    }
+
     ViewData["Title"] = game.GameName;
 }
 
@@ -23,13 +28,13 @@
   <div class="carousel-inner">
 
     <div class="carousel-item active">
-      <img class="d-block w-100" src="~/GamePictures/@images[0].image">
+      <img class="d-block w-100" src="~/img/GamePictures/@game.Id/@images[0].image">
     </div>
 
     @for(int i = 1; i < images.Count; i++)
     {
         <div class="carousel-item">
-            <img class="d-block w-100" src="~/GamePictures/@images[i].image">
+            <img class="d-block w-100" src="~/img/GamePictures/@game.Id/@images[i].image">
         </div>
     }
 
@@ -46,16 +51,16 @@
 </div>
 </div>
 }
-@if(ViewBag.ImPublisher){
+@if(publi){
   <form action="@Url.Action("UploadGameImage","Home")" method="post" enctype="multipart/form-data">
     <input type="file" name="image" accept="image/*" />
-    <input type="hidden" name="idGame" value=@game.Id/>
-    <input type="hidden" name="returnUrl" value="/Home/GamePage?gameId=" + game.Id/>
+    <input type="hidden" name="idGame" value="@game.Id"/>
+    <input type="hidden" name="returnUrl" value="@($"/Home/GamePage?gameId={game.Id}")" />
     <button type="submit">Subir</button>
   </form>
 }
 
-@if(ViewBag.ImPublisher){
+@if(publi){
 <p>@game.Description</p>
 }
 else{
