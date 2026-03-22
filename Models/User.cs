@@ -1,8 +1,9 @@
 public class User
 {
     public int Id { get; set; }
-    public bool IsDeveloper { get; set; }
-    public long Followers { get; set; }
+    public string verifyHash { get; set; }
+     public bool Verified { get; set; }
+    public int Followers { get; set; }
     public int GamesOwned { get; set; }
     public int Followed { get; set; }
 

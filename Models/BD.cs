@@ -34,24 +34,47 @@ public static class BD
     return user;
 }
 
-    public static bool Registrarte(string Nombre, string Contraseña, string Email, bool IsDeveloper)
+    public static void getVerified(int userId)
+    {
+        string query = "UPDATE [User] SET Verified = 1 WHERE Id = @userId";
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Execute(query, new {userId});
+        }
+    }
+
+    public static bool Registrarte(string Nombre, string Contraseña, string Email)
     {
         bool registrado = false;
         string Password = Hashing.passwordHash(Contraseña);
+        string code = secretCode();
+        
 
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"            
-            INSERT INTO [User] (UserName, PasswordHash, Email, Followers, Followed,IsDeveloper, GamesOwned)
-            VALUES (@Nombre, @Password, @Email, 0, 0, @IsDeveloper, 0);";
+            INSERT INTO [User] (UserName, PasswordHash, Email, Followers, Followed, GamesOwned, verifyHash, Verified)
+            VALUES (@Nombre, @Password, @Email, 0, 0, 0,@code,0);";
 
             if (!Existe(Nombre) && !MismoMail(Email))
             {
-                connection.Execute(query, new { Nombre, Password, Email, IsDeveloper });
+                connection.Execute(query, new { Nombre, Password, Email, code });
                 registrado = true;
             }
         }
         return registrado;
+    }
+
+    private static string secretCode()
+    {
+        string abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        string code = "";
+        System.Random rnd = new System.Random();
+        for(int i = 0; i < 6; i++)
+        {
+            code+=abecedario[rnd.Next(0,abecedario.Length)];
+        }
+        return code;
     }
 
     public static int dameId(string usuario)
@@ -97,7 +120,7 @@ public static class BD
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
-            SELECT Id, IsDeveloper, Followers, GamesOwned, Followed, UserName, ProfilePicture,Description,Email,PasswordHash
+            SELECT Id, Followers, GamesOwned, Followed, UserName, ProfilePicture,Description,Email,PasswordHash
             FROM [User]
             WHERE Id = @id";
 
