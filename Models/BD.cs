@@ -365,6 +365,42 @@ public static bool GetReviewed(int userId, int gameId)
         }
     }
 
+    public static MalwareScan GetScan(int gameId)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+    {
+        string query = @"
+        SELECT *
+        FROM MalwareScan
+        WHERE GameId = @gameId";
+
+        return connection.QueryFirstOrDefault<MalwareScan>(query, new { gameId });
+    }
+    }
+
+    public static void UpdateStatus(int gameId, string status)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "UPDATE MalwareScan SET Status = @status WHERE GameId = @gameId";                
+                
+            connection.Execute(query, new { status, gameId });                
+        }
+    }
+
+    public static void SaveScan(int gameId, string tempPath, string analysisId)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string status = "Scanning";
+            string query = @"            
+            INSERT INTO MalwareScan (GameId,TempPath, AnalysisId, Status)
+            VALUES (@gameId, @tempPath, @analysisId, @status);";
+
+            connection.Execute(query, new { gameId, tempPath, analysisId, status });
+        }
+    }
+
 
 
 }

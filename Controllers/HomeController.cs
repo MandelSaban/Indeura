@@ -220,16 +220,16 @@ public class HomeController : BaseController
     public async Task<IActionResult> mail()
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
-        var consumerKey = "054287e36b81333a36fe";
-        var consumerSecret = "yPuIgZL2pXqteHi1lNOW";
+        var consumerKey = ApiKeyManager.MailConsumerKey;
+        var consumerSecret = ApiKeyManager.MailSecretKey;
 
         string url = "https://api.turbo-smtp.com/api/v2/mail/send";
 
         var mailData = new
         {
-            from = "Indeura@gmail.com",
+            from = "indeura.noreply@gmail.com",
             to = usuario.Email,
-            subject = "No reply: Indeura Sign Up",
+            subject = "Indeura verify email",
             cc = "",
             bcc = "",
             content = "Please verify your account: "+usuario.verifyHash,
@@ -272,7 +272,7 @@ public class HomeController : BaseController
         {
             ViewBag.Error = "Ese nombre ya esta en uso";
             ViewBag.Desc = description;
-            return View(); // ⚠️ NO Redirect
+            return View(); 
         }
 
         BD.CreateNewGamePage(name, description, usuario.Id, DateTime.Today);
@@ -282,7 +282,7 @@ public class HomeController : BaseController
 
     public IActionResult Verify(string code)
     {
-        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuarioToVerify"));
         if(code == usuario.verifyHash)
         {
             BD.getVerified(usuario.Id);
@@ -342,7 +342,7 @@ public class HomeController : BaseController
         {
             redirect = "mail";
             User user = BD.IniciarSesion(Nombre, Contraseña);
-            HttpContext.Session.SetString("usuario", Objeto.ObjectToString(user));
+            HttpContext.Session.SetString("usuarioToVerify", Objeto.ObjectToString(user));
         }
         else
         {
@@ -378,7 +378,7 @@ public class HomeController : BaseController
         return View();
     }
 
-/*    [HttpPost]
+    [HttpPost]
 public async Task<IActionResult> UploadGame(IFormFile game, int gameId)
 {
     if (game == null || game.Length == 0)
@@ -390,30 +390,78 @@ public async Task<IActionResult> UploadGame(IFormFile game, int gameId)
         return BadRequest("Solo .zip");
 
     var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "TempUploads");
-    var finalFolder = Path.Combine(Directory.GetCurrentDirectory(), "Games");
-
     Directory.CreateDirectory(tempFolder);
-    Directory.CreateDirectory(finalFolder);
 
     var tempPath = Path.Combine(tempFolder, Guid.NewGuid() + extension);
 
-    // Guardar temporal
     using (var stream = new FileStream(tempPath, FileMode.Create))
     {
         await game.CopyToAsync(stream);
     }
 
-    // VirusTotal
     var client = new RestClient("https://www.virustotal.com/api/v3/files");
     var request = new RestRequest();
 
-    request.AddHeader("x-apikey", "aea8442f38892577b124c709ac763be043fbbf5d5ab67d476dadc7ccd7323aca");
+    request.AddHeader("x-apikey", ApiKeyManager.VirusTotalKey);
     request.AddFile("file", tempPath);
 
     var response = await client.PostAsync(request);
 
     dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content);
     string analysisId = json.data.id;
-}*/
+
+    BD.SaveScan(gameId, tempPath, analysisId);
+
+    return Ok(new { message = "Archivo en análisis" });
+}
+
+[HttpGet]
+public async Task<IActionResult> CheckStatus(int gameId)
+{
+    var scan = BD.GetScan(gameId);
+
+    if (scan == null)
+        return NotFound("No existe");
+
+    if (scan.Status != "Scanning")
+        return Ok(scan.Status);
+
+    var client = new RestClient($"https://www.virustotal.com/api/v3/analyses/{scan.AnalysisId}");
+    var request = new RestRequest();
+    request.AddHeader("x-apikey", ApiKeyManager.VirusTotalKey);
+
+    var response = await client.GetAsync(request);
+
+    dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content);
+
+    string status = json.data.attributes.status;
+
+    if (status != "completed")
+        return Ok("Scanning");
+
+    int malicious = json.data.attributes.stats.malicious;
+
+    if (malicious == 0)
+    {
+        var finalFolder = Path.Combine(Directory.GetCurrentDirectory(), "Games");
+        Directory.CreateDirectory(finalFolder);
+
+        var finalPath = Path.Combine(finalFolder, Path.GetFileName(scan.TempPath));
+
+        System.IO.File.Move(scan.TempPath, finalPath);
+
+        BD.UpdateStatus(gameId, "Safe");
+
+        return Ok("Safe");
+    }
+    else
+    {
+        System.IO.File.Delete(scan.TempPath);
+
+        BD.UpdateStatus(gameId, "Malicious");
+
+        return Ok("Malicious");
+    }
+}
 
 }
