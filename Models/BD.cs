@@ -27,8 +27,16 @@ public static class BD
             if (ok)
             {
                 user = dbUser;
+
+                if (!dbUser.Verified)
+                {
+                    user = null;
+                }
             }
+             
         }
+
+           
     }
 
     return user;

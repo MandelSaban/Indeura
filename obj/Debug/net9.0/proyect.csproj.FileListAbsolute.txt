@@ -650,3 +650,4 @@ C:\Users\TOMAS\Desktop\proyecto\Indeura\obj\Debug\net9.0\refint\proyect.dll
 C:\Users\TOMAS\Desktop\proyecto\Indeura\obj\Debug\net9.0\proyect.pdb
 C:\Users\TOMAS\Desktop\proyecto\Indeura\obj\Debug\net9.0\proyect.genruntimeconfig.cache
 C:\Users\TOMAS\Desktop\proyecto\Indeura\obj\Debug\net9.0\ref\proyect.dll
+C:\Users\TOMAS\Desktop\proyecto\Indeura\bin\Debug\net9.0\RestSharp.dll

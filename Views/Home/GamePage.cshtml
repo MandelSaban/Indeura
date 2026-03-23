@@ -52,10 +52,17 @@
 </div>
 }
 @if(publi){
+  <h3>Agregar imagenes</h3>
   <form action="@Url.Action("UploadGameImage","Home")" method="post" enctype="multipart/form-data">
     <input type="file" name="image" accept="image/*" />
     <input type="hidden" name="idGame" value="@game.Id"/>
     <input type="hidden" name="returnUrl" value="@($"/Home/GamePage?gameId={game.Id}")" />
+    <button type="submit">Subir</button>
+  </form>
+  <h3>Subir/Actualizar juego</h3>
+  <form action="@Url.Action("UploadGame","Home")" method="post" enctype="multipart/form-data">
+    <input type="file" name="game" required/>
+    <input type="hidden" name="gameId" value="@game.Id"/>
     <button type="submit">Subir</button>
   </form>
 }
@@ -115,6 +122,8 @@ else
 {
     <a href='@Url.Content("~/Download/IndeuraSetup.exe")'>Descargar Indeura</a>
 }
+
+
 
 <br /><br /><br /><br /><br />
 

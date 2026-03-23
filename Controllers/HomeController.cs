@@ -219,7 +219,7 @@ public class HomeController : BaseController
     
     public async Task<IActionResult> mail()
     {
-        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuario"));
+        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuarioToVerify"));
         var consumerKey = ApiKeyManager.MailConsumerKey;
         var consumerSecret = ApiKeyManager.MailSecretKey;
 
@@ -227,7 +227,7 @@ public class HomeController : BaseController
 
         var mailData = new
         {
-            from = "indeura.noreply@gmail.com",
+            from = "noreply@indeura.sytes.net",
             to = usuario.Email,
             subject = "Indeura verify email",
             cc = "",
