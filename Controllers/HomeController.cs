@@ -227,24 +227,20 @@ public class HomeController : BaseController
 
         var mailData = new
         {
+            authuser = consumerKey,
+            authpass = consumerSecret,
+
             from = "noreply@indeura.sytes.net",
             to = usuario.Email,
             subject = "Indeura verify email",
-            cc = "",
-            bcc = "",
-            content = "Please verify your account: "+usuario.verifyHash,
-            html_content = ""
-        }; // Mail Data setup.
+            content = "Please verify your account: " + usuario.verifyHash
+        };
 
         using (HttpClient httpClient = new HttpClient())
         {
             // JSON data seriaization
             var json = JsonSerializer.Serialize(mailData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            // Set authentication headers
-            content.Headers.Add("consumerKey", consumerKey);
-            content.Headers.Add("consumerSecret", consumerSecret);
 
             // Trigger POST request
             using (var response = await httpClient.PostAsync(url, content))
