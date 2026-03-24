@@ -59,13 +59,23 @@
     <input type="hidden" name="returnUrl" value="@($"/Home/GamePage?gameId={game.Id}")" />
     <button type="submit">Subir</button>
   </form>
-  <h3>Subir/Actualizar juego</h3>
+
   <form action="@Url.Action("UploadGame","Home")" method="post" enctype="multipart/form-data">
-    <input type="file" name="game" required/>
+    <h5>Nombre del ejecutable (Incluir extension)</h5>
+    <input type="text" name="exe" required/>
+    <h5>Subir/Actualizar juego</h5>
+    <input type="file" name="game" required/>    
     <input type="hidden" name="gameId" value="@game.Id"/>
+    <br>
     <button type="submit">Subir</button>
   </form>
+
+  <div>
+    <p>Estado del juego: <span id="statusText">Cargando...</span></p>
+</div>
 }
+
+<br />
 
 @if(!publi){
 <pre>@game.Description</pre>
@@ -182,3 +192,47 @@ else{
 
 
 <br /><br /><br /><br /><br /><br /><br /><br />
+
+<script>
+const gameId = parseInt("@game.Id");
+const statusText = document.getElementById("statusText");
+
+const interval = setInterval(async () => {
+    try {
+        const res = await fetch(`@Url.Action("CheckStatus", "Home")?gameId=${gameId}`);
+        const status = await res.text();
+
+        // Mostrar estado
+        if (status === "Scanning") {
+            statusText.innerText = "🟡 Escaneando...";
+        } 
+        else if (status === "Safe") {
+            statusText.innerText = "🟢 Seguro";
+            clearInterval(interval);
+        } 
+        else if (status === "Malicious") {
+            statusText.innerText = "🔴 Malware detectado";
+            clearInterval(interval);
+        } 
+        else {
+            statusText.innerText = status;
+        }
+
+    } catch (err) {
+        console.error(err);
+        statusText.innerText = "Error al verificar";
+        clearInterval(interval);
+    }
+}, 5000); // cada 5s
+
+let dots = 0;
+
+setInterval(() => {
+    if (statusText.innerText.includes("Escaneando")) {
+        dots = (dots + 1) % 4;
+        statusText.innerText = "🟡 Escaneando" + ".".repeat(dots);
+    }
+}, 500);
+
+
+</script>

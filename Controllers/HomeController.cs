@@ -379,7 +379,7 @@ public class HomeController : BaseController
     }
 
     [HttpPost]
-public async Task<IActionResult> UploadGame(IFormFile game, int gameId)
+public async Task<IActionResult> UploadGame(IFormFile game, int gameId, string exe)
 {
     if (game == null || game.Length == 0)
         return BadRequest("Archivo inválido");
@@ -389,10 +389,17 @@ public async Task<IActionResult> UploadGame(IFormFile game, int gameId)
     if (extension != ".zip")
         return BadRequest("Solo .zip");
 
+    BD.UpdateGameExecutable(exe,gameId);
+
     var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "TempUploads");
     Directory.CreateDirectory(tempFolder);
 
-    var tempPath = Path.Combine(tempFolder, Guid.NewGuid() + extension);
+    var tempPath = Path.Combine(tempFolder, gameId + extension);
+
+    if (System.IO.File.Exists(tempPath))
+    {
+        System.IO.File.Delete(tempPath);
+    }
 
     using (var stream = new FileStream(tempPath, FileMode.Create))
     {
@@ -412,7 +419,7 @@ public async Task<IActionResult> UploadGame(IFormFile game, int gameId)
 
     BD.SaveScan(gameId, tempPath, analysisId);
 
-    return Ok(new { message = "Archivo en análisis" });
+    return RedirectToAction("GamePage", new { gameId = gameId });
 }
 
 [HttpGet]

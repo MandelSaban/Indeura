@@ -1,8 +1,16 @@
 @{
     ViewData["Title"] = "Profile";
+
+    string pfp;
+    if(string.IsNullOrEmpty(ViewBag.usuario.ProfilePicture)){
+        pfp = "default.png";
+    }
+    else{
+      pfp = ViewBag.usuario.ProfilePicture;
+    }
 }
 
-<img src="~/img/profilePictures/@ViewBag.usuario.ProfilePicture">
+<img src="~/img/profilePictures/@pfp" style="width:100px">
 
 @if(ViewBag.me){
 <form action="@Url.Action("SubirImagen","Home")" method="post" enctype="multipart/form-data">

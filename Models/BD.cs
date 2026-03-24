@@ -348,6 +348,17 @@ public static bool GetReviewed(int userId, int gameId)
         }
     }
 
+    public static void UpdateGameExecutable(string exe, int gameId)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "UPDATE Game SET ExecutableName = @exe WHERE Id = @gameId";
+                
+            connection.Execute(query, new { exe, gameId });
+                
+        }
+    }
+
     public static void InsertImagesGame(int idGame, string imageDir)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -378,9 +389,10 @@ public static bool GetReviewed(int userId, int gameId)
         using (SqlConnection connection = new SqlConnection(_connectionString))
     {
         string query = @"
-        SELECT *
+        SELECT TOP 1 *
         FROM MalwareScan
-        WHERE GameId = @gameId";
+        WHERE GameId = @gameId
+        ORDER BY Id DESC";
 
         return connection.QueryFirstOrDefault<MalwareScan>(query, new { gameId });
     }
