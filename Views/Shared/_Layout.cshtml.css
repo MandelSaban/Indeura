@@ -11,6 +11,20 @@ a {
   color: #0077cc;
 }
 
+.header-nav{
+  display: flex;
+  justify-content: space-around;
+  background-color: #22C55E;
+}
+
+.header-div-buttons{
+  justify-content: ;
+}
+
+.header-logo {
+  width: 10%;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;

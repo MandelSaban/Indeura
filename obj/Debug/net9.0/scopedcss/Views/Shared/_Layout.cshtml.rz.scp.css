@@ -11,6 +11,20 @@ a[b-79vaedpu2e] {
   color: #0077cc;
 }
 
+.header-nav[b-79vaedpu2e]{
+  display: flex;
+  justify-content: space-around;
+  background-color: #22C55E;
+}
+
+.header-div-buttons[b-79vaedpu2e]{
+  justify-content: ;
+}
+
+.header-logo[b-79vaedpu2e] {
+  width: 10%;
+}
+
 .btn-primary[b-79vaedpu2e] {
   color: #fff;
   background-color: #1b6ec2;
