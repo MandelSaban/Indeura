@@ -14,12 +14,46 @@ a[b-79vaedpu2e] {
 
 .header-nav[b-79vaedpu2e]{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   background-color: #22C55E;
 }
 
 .header-div-buttons[b-79vaedpu2e]{
-  justify-content: ;
+  display: flex;
+  justify-content: center; 
+  align-items: center;         
+  gap: 40px;
+}
+
+.header-button[b-79vaedpu2e]{
+  min-width: 100px;
+  font-size: 150%;
+  padding: 15%;
+  border-radius: 10%;
+  background-color: #8B5CF6;
+  color: white;
+  border: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 0.8s cubic-bezier(0.22, 0.9, 0.28, 1),
+              transform 0.18s ease;
+  line-height: 1;
+}
+
+.header-button:hover[b-79vaedpu2e],
+.header-button:focus[b-79vaedpu2e],
+.header-button:focus-visible[b-79vaedpu2e] {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.header-button:active[b-79vaedpu2e] {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.header-div-logo[b-79vaedpu2e]{
+  padding: 1%;
+  
 }
 
 .header-logo[b-79vaedpu2e] {
