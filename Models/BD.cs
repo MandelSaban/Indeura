@@ -165,7 +165,7 @@ public static class BD
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"
-            SELECT Id, IdPublisher, Date, NumberOfAchievements,GameName,Description, PriceUSD, DiscountPercentage, ExecutableName
+            SELECT Id, IdPublisher, Date, NumberOfAchievements,GameName,Description, PriceUSD, DiscountPercentage
             FROM Game
             WHERE Id = @gameId";
 
@@ -324,8 +324,8 @@ public static bool GetReviewed(int userId, int gameId)
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"            
-            INSERT INTO Game (GameName, Description, IdPublisher, Date, NumberOfAchievements, PriceUSD, DiscountPercentage, ExecutableName)
-            VALUES (@GameName, @description, @idPublisher, @date, 0, 0, 0, '');";
+            INSERT INTO Game (GameName, Description, IdPublisher, Date, NumberOfAchievements, PriceUSD, DiscountPercentage)
+            VALUES (@GameName, @description, @idPublisher, @date, 0, 0, 0);";
 
             connection.Execute(query, new { GameName, description, idPublisher, date });
         }
@@ -339,17 +339,6 @@ public static bool GetReviewed(int userId, int gameId)
                 
                 
                     connection.Execute(query, new { description, gameId });
-                
-        }
-    }
-
-    public static void UpdateGameExecutable(string exe, int gameId)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            string query = "UPDATE Game SET ExecutableName = @exe WHERE Id = @gameId";
-                
-            connection.Execute(query, new { exe, gameId });
                 
         }
     }

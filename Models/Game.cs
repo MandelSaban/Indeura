@@ -11,7 +11,6 @@ public class Game
     public float PriceUSD { get; set; }
     public float DiscountPercentage { get; set; }
 
-    public string ExecutableName { get; set; }
 
     public Game(){
 

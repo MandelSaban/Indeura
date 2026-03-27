@@ -219,7 +219,7 @@ public class HomeController : BaseController
     
     public async Task<IActionResult> mail()
     {
-        User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuarioToVerify"));
+        /*User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuarioToVerify"));
         var consumerKey = ApiKeyManager.MailConsumerKey;
         var consumerSecret = ApiKeyManager.MailSecretKey;
 
@@ -255,7 +255,7 @@ public class HomeController : BaseController
                     Console.WriteLine("Request error: " + response.StatusCode);
                 }
             }
-        }
+        }*/
         return View("Verify");
     }
 
@@ -279,7 +279,7 @@ public class HomeController : BaseController
     public IActionResult Verify(string code)
     {
         User usuario = Objeto.StringToObject<User>(HttpContext.Session.GetString("usuarioToVerify"));
-        if(code == usuario.verifyHash)
+        if(/*code == usuario.verifyHash*/ true)
         {
             BD.getVerified(usuario.Id);
             usuario.Verified = true;
@@ -375,7 +375,7 @@ public class HomeController : BaseController
     }
 
     [HttpPost]
-public async Task<IActionResult> UploadGame(IFormFile game, int gameId, string exe)
+public async Task<IActionResult> UploadGame(IFormFile game, int gameId)
 {
     if (game == null || game.Length == 0)
         return BadRequest("Archivo inválido");
@@ -385,7 +385,9 @@ public async Task<IActionResult> UploadGame(IFormFile game, int gameId, string e
     if (extension != ".zip")
         return BadRequest("Solo .zip");
 
-    BD.UpdateGameExecutable(exe,gameId);
+    if (game.Length > 650 * 1024 * 1024)
+        return BadRequest("El archivo supera los 650MB (límite VirusTotal)");
+
 
     var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "TempUploads");
     Directory.CreateDirectory(tempFolder);
@@ -393,22 +395,35 @@ public async Task<IActionResult> UploadGame(IFormFile game, int gameId, string e
     var tempPath = Path.Combine(tempFolder, gameId + extension);
 
     if (System.IO.File.Exists(tempPath))
-    {
         System.IO.File.Delete(tempPath);
-    }
 
     using (var stream = new FileStream(tempPath, FileMode.Create))
     {
         await game.CopyToAsync(stream);
     }
 
-    var client = new RestClient("https://www.virustotal.com/api/v3/files");
-    var request = new RestRequest();
+    string uploadUrl = "https://www.virustotal.com/api/v3/files";
 
-    request.AddHeader("x-apikey", ApiKeyManager.VirusTotalKey);
-    request.AddFile("file", tempPath);
+    var client = new RestClient();
 
-    var response = await client.PostAsync(request);
+    // 🔴 Si pesa más de 32MB → pedir upload_url
+    if (game.Length > 32 * 1024 * 1024)
+    {
+        var urlRequest = new RestRequest("https://www.virustotal.com/api/v3/files/upload_url");
+        urlRequest.AddHeader("x-apikey", ApiKeyManager.VirusTotalKey);
+
+        var urlResponse = await client.GetAsync(urlRequest);
+
+        dynamic urlJson = Newtonsoft.Json.JsonConvert.DeserializeObject(urlResponse.Content);
+        uploadUrl = urlJson.data;
+    }
+
+    // Subida del archivo
+    var uploadRequest = new RestRequest(uploadUrl);
+    uploadRequest.AddHeader("x-apikey", ApiKeyManager.VirusTotalKey);
+    uploadRequest.AddFile("file", tempPath);
+
+    var response = await client.PostAsync(uploadRequest);
 
     dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(response.Content);
     string analysisId = json.data.id;

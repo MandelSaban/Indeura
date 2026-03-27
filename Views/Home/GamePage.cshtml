@@ -61,8 +61,6 @@
   </form>
 
   <form action="@Url.Action("UploadGame","Home")" method="post" enctype="multipart/form-data">
-    <h5>Nombre del ejecutable (Incluir extension)</h5>
-    <input type="text" name="exe" required/>
     <h5>Subir/Actualizar juego</h5>
     <input type="file" name="game" required/>    
     <input type="hidden" name="gameId" value="@game.Id"/>
