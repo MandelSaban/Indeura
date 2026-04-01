@@ -6,6 +6,8 @@ builder.Services.AddSession();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSignalR();
+
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 650 * 1024 * 1024; // 650MB
@@ -38,5 +40,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
+app.MapHub<ChatHub>("/chat");
 app.Run();

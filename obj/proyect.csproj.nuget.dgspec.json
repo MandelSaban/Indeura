@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\49088017\\Downloads\\proyecto\\Indeura\\proyect.csproj": {}
+    "C:\\Users\\devandroid\\Downloads\\Proyecto\\Indeura\\proyect.csproj": {}
   },
   "projects": {
-    "C:\\Users\\49088017\\Downloads\\proyecto\\Indeura\\proyect.csproj": {
+    "C:\\Users\\devandroid\\Downloads\\Proyecto\\Indeura\\proyect.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\49088017\\Downloads\\proyecto\\Indeura\\proyect.csproj",
+        "projectUniqueName": "C:\\Users\\devandroid\\Downloads\\Proyecto\\Indeura\\proyect.csproj",
         "projectName": "proyect",
-        "projectPath": "C:\\Users\\49088017\\Downloads\\proyecto\\Indeura\\proyect.csproj",
-        "packagesPath": "C:\\Users\\49088017\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\49088017\\Downloads\\proyecto\\Indeura\\obj\\",
+        "projectPath": "C:\\Users\\devandroid\\Downloads\\Proyecto\\Indeura\\proyect.csproj",
+        "packagesPath": "C:\\Users\\devandroid\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\devandroid\\Downloads\\Proyecto\\Indeura\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\49088017\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\devandroid\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -61,6 +61,10 @@
             "Microsoft.AspNetCore.Session": {
               "target": "Package",
               "version": "[2.3.9, )"
+            },
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.2.9, )"
             },
             "Microsoft.Data.SqlClient": {
               "target": "Package",

@@ -21,6 +21,8 @@
 <a href='@Url.Action("GamePublicationEnter","Home")'>uploadGame</a>
 <a href='@Url.Action("Store","Home")'>store</a>
 <a href='@Url.Action("mail","Home")'>martoMail</a>
+<a href='@Url.Action("Chat","Home", new {toUserId = 2})'>chat</a>
+<a href='@Url.Action("Chat","Home", new {toUserId = 1})'>chat</a>
 
 @if(usuario!=null){
     <a href='@Url.Action("Profile","Home", new {userId = usuario.Id})'>perfil</a>

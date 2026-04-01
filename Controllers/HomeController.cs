@@ -25,6 +25,12 @@ public class HomeController : BaseController
         return View();
     }
 
+    public IActionResult Chat(int toUserId)
+    {
+        ViewBag.ToUser = toUserId;
+        return View();
+    }
+
     public IActionResult UpdateGameDescription(string description, string returnUrl, int gameId)
     {
         BD.UpdateGameDescription(description, gameId);

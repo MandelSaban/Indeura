@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Chat";
+}
+
+@{
+    var usuarioJson = Context.Session.GetString("usuario"); 
+    User usuario = null;
+    if (!string.IsNullOrEmpty(usuarioJson))
+    {
+        usuario = Objeto.StringToObject<User>(usuarioJson);
+    }
+}
+
+<h2>Chat</h2>
+
+<input type="hidden" id="user" value='@usuario.Id' />
+<input type="hidden" id="toUserId" value='@ViewBag.ToUser' />
+<input id="message" placeholder="Mensaje" />
+<button onclick="send()">Enviar</button>
+
+<ul id="chat"></ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chat")
+    .build();
+
+connection.on("receiveMessage", (user, message) => {
+    const li = document.createElement("li");
+    li.textContent = user + ": " + message;
+    document.getElementById("chat").appendChild(li);
+});
+
+connection.start().then(() => {
+    const user = document.getElementById("user").value;
+
+    // 🔥 REGISTRAR USUARIO
+    connection.invoke("Register", user);
+}).catch(err => console.error(err.toString()));
+
+const messageInput = document.getElementById("message");
+
+messageInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        send();
+    }
+});
+
+function send() {
+    const user = document.getElementById("user").value;
+    const toUser = document.getElementById("toUserId").value;
+    const messageElem = document.getElementById("message");
+    const message = messageElem.value.trim();
+
+    if (!message) return;
+
+    connection.invoke("SendPrivate", user, toUser, message)
+        .then(() => {
+            // mostrar tu propio mensaje
+            const li = document.createElement("li");
+            li.textContent = "Yo: " + message;
+            document.getElementById("chat").appendChild(li);
+
+            messageElem.value = "";
+            messageElem.focus();
+        })
+        .catch(err => console.error(err.toString()));
+}
+</script>
